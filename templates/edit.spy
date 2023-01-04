@@ -1,0 +1,18 @@
+<< partials/head >>
+<body>
+    << partials/header >>
+    
+    <section class="textarea">
+        <form method="post">
+            <textarea name="textarea" autofocus>{{ data }}</textarea>
+            <input type="text" name="path" value="{{ path }}" hidden>
+            <section class="post-buttons">
+                <input class="action-button" type="submit" name="save" value="Save" formaction="/save"> | 
+                <input class="action-button" type="submit" name="publish" value="Update" formaction="/update">
+            </section>
+        </form>
+    </section>
+    <footer>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<< partials/head >>
+<body>
+    << partials/header >>
+    <main id="settings">
+        <form method="post">
+            <section>
+                <label for="password">Reset password:</label><br/>
+                <input class="password-reset" type="password" name="password" id="password">
+                <input type="submit" name="logout" value="Reset Password" formaction="/reset-password">
+            </section>
+            <section>
+                <input type="submit" name="logout" value="Log Out" formaction="/logout">
+            </section>
+        </form>
+    </main>
+    <footer></footer>
+</body>
+</html>

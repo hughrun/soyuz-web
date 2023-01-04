@@ -1,0 +1,16 @@
+<< partials/head >>
+<body>
+    <header class="welcome">
+        <h1>Welcome to Soyuz</h1>
+    </header>
+    <section class="login">
+        <form method="POST" action="/login">
+            <label for="username">username </label><br/>
+            <input type="text" name="username"><br/>
+            <label for="password">password </label><br/>
+            <input type="password" name="password"><br/><br/>
+            <button type="submit">Log in!</button>
+        </form>
+    </section>
+</body>
+</html>
