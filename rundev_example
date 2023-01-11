@@ -1,0 +1,4 @@
+SOYUZ_PORT=1966 \
+GEMINI_PATH='~/dev/gemini' \
+SOYUZ_SESSION_SECRET='keyboard cat' \
+node server.js

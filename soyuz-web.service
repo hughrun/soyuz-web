@@ -1,0 +1,14 @@
+[Service]
+Type=simple
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=15
+TimeoutSec=15
+KillMode=process
+User=gemini
+WorkingDirectory=/home/gemini
+Environment="SOYUZ_PORT=1966"
+Environment="GEMINI_PATH=/srv/gemini"
+Environment="SOYUZ_SESSION_SECRET=change_me"
+[Install]
+WantedBy=multi-user.target
