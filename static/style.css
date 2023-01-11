@@ -51,7 +51,7 @@ textarea,
 main {
     outline: none;
     width: 90%;
-    height:80vh;
+    min-height:80vh;
     border: none;
     resize: none;
 }
@@ -91,4 +91,12 @@ main {
     margin-top: 1em;
     border-top: 1px solid #999;
     padding-top: 1em;
+}
+
+.help {
+    margin-bottom: 2em;
+}
+
+.menu-help {
+    font-weight: bolder;
 }
