@@ -2,7 +2,6 @@ const GEMINI_PATH = process.env.GEMINI_PATH
 const Database = require("better-sqlite3")
 const {mkdir, readFile, writeFile} = require('node:fs')
 const { pbkdf2, randomBytes } = require('node:crypto')
-const { resolve } = require("node:path")
 db = new Database('soyuz.db', {})
 
 function getNow() {
