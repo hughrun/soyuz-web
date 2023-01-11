@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 
 const { getLatestPost, getNow, publishNewPost, requireLoggedIn, resetPassword, saveFile, updatePost, verifyUser, getSavedFile } = require('./utilities')
@@ -6,8 +5,8 @@ const { getLatestPost, getNow, publishNewPost, requireLoggedIn, resetPassword, s
 const bodyParser = require('body-parser')
 const Database = require('better-sqlite3');
 const session = require('express-session')
-const sprightly = require('sprightly');
 const SqliteStore = require("better-sqlite3-session-store")(session)
+const sprightly = require('sprightly');
 
 // configure Express
 const app = express()
@@ -108,7 +107,8 @@ app.post('/publish', requireLoggedIn, (req, res) => {
 })
 
 app.post('/save', requireLoggedIn, (req, res) => {
-    saveFile(req.session.user, req.body.textarea, () => {
+    saveFile(req.session.user.username, req.body.textarea,)
+    .then( () => {
         res.redirect('/')
     })
 })
