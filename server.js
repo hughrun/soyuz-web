@@ -49,8 +49,10 @@ app.set('view engine', 'spy');
 
 app.get('/', requireLoggedIn, (req, res) => {
     let data = {
+        title: 'Home',
         disabled: '', 
-        message: getSavedFile(req.session.user.username)}
+        message: getSavedFile(req.session.user.username)
+    }
     let today = getNow().toISOString().slice(0,10)
     let latestPost = req.session.user.latest_post
     if (today === latestPost) {
@@ -64,22 +66,26 @@ app.get('/login', (req, res) => {
     if (req.session.user) {
         res.redirect('/')
     } else {
-        res.render('login.spy') 
+        res.render('login.spy', {title: 'Log In'}) 
     }
 })
 
 app.get('/edit', requireLoggedIn, (req, res) => {
     getLatestPost( req.session.user.directory, (data, path) => {
-        res.render('edit.spy', {data: data, path: path})
+        res.render('edit.spy', {data: data, path: path, title: 'Edit'})
     })
 })
 
 app.get('/settings', requireLoggedIn, (req, res) => {
-    res.render('settings.spy') 
+    res.render('settings.spy', {title: 'Settings'}) 
 })
 
 app.get('/try-again', requireLoggedIn, (req, res, next) => {
-    res.render('try-again.spy') 
+    res.render('try-again.spy', {title: 'Log In'}) 
+})
+
+app.get('/help', requireLoggedIn, (req, res, next) => {
+    res.render('help.spy', {title: 'Help'}) 
 })
 
 // POST

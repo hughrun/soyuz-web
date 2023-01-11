@@ -1,0 +1,24 @@
+<< partials/head >>
+<body>
+    << partials/header >>
+    <main id="settings">
+        <h1>Help</h1>
+        <p>Soyuz is a web app for writing Gemini posts.</p>
+        <section class="help">
+            <p class="menu-help">New</p>
+            <p>Takes you to the home page where you can start writing today's post. The title of your post should be indicated by a level 1 heading at the top of the page.</p>
+            <p class="menu-help">Edit</p>
+            <p>Edit the most recent post - this could have been published with soyuz, or another way. If you change the title, this will be changed in the year archive and capsule homepage.</p>
+            <p class="menu-help">Settings</p>
+            <p>Change your password, or log out.</p>
+            <p class="menu-help">Help</p>
+            <p>Display this help page.</p>
+            <p class="menu-help">Save</p>
+            <p>Save a draft of your post. Any drafts will be deleted on the next publish.</p>
+            <p class="menu-help">Publish</p>
+            <p>Publish the current draft to your Gemini capsule, and delete any saved drafts. You can only publish one post per day, but if you like you can update your day's post by using the 'edit' function.</p>
+        </section>
+    </main>
+    <footer></footer>
+</body>
+</html>
