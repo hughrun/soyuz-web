@@ -2,6 +2,7 @@ const GEMINI_PATH = process.env.GEMINI_PATH
 const Database = require("better-sqlite3")
 const {mkdir, readFile, writeFile} = require('node:fs')
 const { pbkdf2, randomBytes } = require('node:crypto')
+const { resolve } = require("node:path")
 db = new Database('soyuz.db', {})
 
 function getNow() {
@@ -75,13 +76,13 @@ const updateLatestPostDate = function(username, callback) {
 }
 
 // AUTHORISATION MIDDLEWARE
-const verifyUser = async function (req, res, next) {
+const verifyUser = function (req, res, next) {
     let username = req.body.username
     let password = req.body.password
     let stmt = db.prepare(
         'SELECT * FROM users WHERE username = ?'
         )
-     user = await stmt.get(username)
+     user = stmt.get(username)
 
     if (!user) {
         return next()
@@ -147,11 +148,11 @@ const publishNewPost = function(req, cb) {
             })
         })
         // clear any saved post now that it is published
-        saveFile(req.session.user.username, '# Title of my note').then( () => {
-                return updateLatestPostDate(req.session.user.username, datestring => {
-                    req.session.user.latest_post = datestring
+        saveFile(req.session.user.username, '# Title of my note', () => {
+            return updateLatestPostDate(req.session.user.username, datestring => {
+                req.session.user.latest_post = datestring
                     return cb()
-            })
+                })
         })
     }
 
@@ -279,20 +280,20 @@ let updatePost = function(req, callback) {
     })
 }
 
-let saveFile = async function(user, text) {
+let saveFile = function(user, text, callback) {
     let stmt = db.prepare(
         'UPDATE users SET saved_post = ? WHERE username = ?'
         );
-    saved = await stmt.run(text, user);
-    return saved
+    saved = stmt.run(text, user);
+    return callback();
 }
 
-let getSavedFile = async function(user) {
+let getSavedFile = function(user) {
     let stmt = db.prepare(
         'SELECT saved_post FROM users WHERE username = ?'
         )
     stmt.pluck(true)
-    let post = await stmt.get(user)
+    let post = stmt.get(user)
     return post
 }
 

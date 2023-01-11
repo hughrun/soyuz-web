@@ -113,8 +113,7 @@ app.post('/publish', requireLoggedIn, (req, res) => {
 })
 
 app.post('/save', requireLoggedIn, (req, res) => {
-    saveFile(req.session.user.username, req.body.textarea,)
-    .then( () => {
+    saveFile(req.session.user.username, req.body.textarea, () => {
         res.redirect('/')
     })
 })
