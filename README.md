@@ -1,8 +1,8 @@
 Soyuz (Союз - 'union') connects the web and gemini.
 
-This repository is for `soyuz-web`, and Express web application for publishing from the web to Gemini capsules.
+This repository is for `soyuz-web`, an Express web application for publishing from the web to Gemini capsules.
 
-There will soon be a sister-repository, `soyuz-cli` for publishing from the command line on Unix-like systems. You do not have to use `soyuz-cli` to use `soyuz-web`.
+There will soon be a sister-repository, `soyuz-cli` for publishing from the command line on Unix-like systems. You do not have to use `soyuz-cli` to use `soyuz-web`, and in multi-user systems, definitely shouldn't.
 
 Soyuz is named after the Russian spacecraft.
 
@@ -68,13 +68,17 @@ e.g. `npm run user-create Hugh gemini.example.com` would create a new user `Hugh
 
 7. Edit `soyuz.nginx` and replace `example.com` with your own domain. Check the port number matches your systemd file.
 8. `cp soyuz.nginx /etc/nginx/sites-available/soyuz`
-9. `ln -s etc/nginx/sites-available/soyuz etc/nginx/sites-enabled/`
+9. `ln -s /etc/nginx/sites-available/soyuz /etc/nginx/sites-enabled/`
 10. `systemctl reload nginx`
+
+## Secure your site with TLS from Lets Encrypt
+
+11. `certbot --nginx`
 
 ## Start systemd service
 
-11. `sudo systemctl start soyuz-web`
+12. `systemctl start soyuz-web`
 
 ## Create user
 
-12. `npm run user-create sam example.com`
+13. `npm run user-create sam example.com`
