@@ -1,0 +1,12 @@
+<< partials/head >>
+<body>
+    <section>
+      << partials/header >>
+      <main>
+        <h2> {{ title }}</h2>
+        <p>Hooray 🎉</p>
+      </main>
+    </section>
+<footer></footer>
+</body>
+</html>
