@@ -50,7 +50,7 @@ app.set('view engine', 'spy');
 app.get('/', requireLoggedIn, (req, res) => {
     let data = {
         title: 'Home',
-        disabled: '', 
+        disabled: '',
         message: getSavedFile(req.session.user.username)
     }
     let today = getNow().toISOString().slice(0,10)
@@ -66,7 +66,7 @@ app.get('/login', (req, res) => {
     if (req.session.user) {
         res.redirect('/')
     } else {
-        res.render('login.spy', {title: 'Log In'}) 
+        res.render('login.spy', {title: 'Log In'})
     }
 })
 
@@ -77,15 +77,19 @@ app.get('/edit', requireLoggedIn, (req, res) => {
 })
 
 app.get('/settings', requireLoggedIn, (req, res) => {
-    res.render('settings.spy', {title: 'Settings'}) 
+    res.render('settings.spy', {title: 'Settings'})
 })
 
 app.get('/try-again', requireLoggedIn, (req, res, next) => {
-    res.render('try-again.spy', {title: 'Log In'}) 
+    res.render('try-again.spy', {title: 'Log In'})
 })
 
 app.get('/help', requireLoggedIn, (req, res, next) => {
-    res.render('help.spy', {title: 'Help'}) 
+    res.render('help.spy', {title: 'Help'})
+})
+
+app.get('/published', requireLoggedIn, (req, res, next) => {
+    res.render('published.spy', {title: 'You published a note!'})
 })
 
 // POST
@@ -108,7 +112,7 @@ app.post('/logout', function(req, res, next){
 
 app.post('/publish', requireLoggedIn, (req, res) => {
     publishNewPost(req, () => {
-        res.redirect('/')
+        res.redirect('/published')
     })
 })
 

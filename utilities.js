@@ -86,9 +86,9 @@ const verifyUser = function (req, res, next) {
     if (!user) {
         return next()
     }
-    
+
     pbkdf2(password, user.salt, 310000, 32, 'sha512', function(err, hashedPassword) {
-        if (err) { 
+        if (err) {
             return next()
         }
         if (user.password !== hashedPassword.toString('hex')) {
@@ -168,16 +168,17 @@ const publishNewPost = function(req, cb) {
                     })
                 }
             } else {
+                let newlines = []
                 let links = data.split('## Latest notes')
                 let lines = links[1].split('\n')
-                for (let i = 6; i < 2; i--) {
-                    if (lines[i] && lines[i].startsWith('=>')) {
-                        lines[i] = lines[i-1]
+                for (let line of lines) {
+                    if (line.startsWith('=>') && newlines.length < 4) {
+                        newlines.push(line)
                     }
                 }
                 lines[0] = '## Latest notes'
-                lines[2] = `=> /${year}/${dateString}.gmi ${dateString} (${title})`
-                updated = links[0] + lines.join('\n')
+                newlines.unshift(`## Latest notes\n\n=> /${year}/${dateString}.gmi ${dateString} (${title})`)
+                updated = newlines.join('\n')
                 writeFile(indexFile, updated, (err) => {
                     if (err) {
                         // if the directory doesn't exist, create it and try again
@@ -213,7 +214,7 @@ const publishNewPost = function(req, cb) {
 }
 
 let getLatestPost = function(directory, callback) {
-    // we check the index file because 
+    // we check the index file because
     // a new post could have come from
     // somewhere other than the app
     // e.g. from a CLI on a laptop etc
@@ -298,7 +299,7 @@ let getSavedFile = function(user) {
 
 // TODO:
 let savePictures = async function(text) {
-    // we will need to save pictures to the server 
+    // we will need to save pictures to the server
     // separately when publishing
 }
 
