@@ -1,6 +1,9 @@
 << partials/head >>
 <body>
-    << partials/header >>
+    <header>
+        <a class="action-button" href="/">Home</a> | 
+        <a class="action-button" href="/settings">Settings</a>
+    </header>
     <main id="settings">
         <h1>Help</h1>
         <p>Soyuz is a web app for writing Gemini posts.</p>

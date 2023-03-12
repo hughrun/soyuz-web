@@ -1,17 +1,17 @@
 << partials/head >>
-<body>
+<body class="{{ disabled }}">
     <header>
         <a class="action-button" href="/">Home</a> | 
         <a class="action-button" href="/settings">Settings</a> | 
         <a class="action-button" href="/help">Help</a>
     </header>
-    
     <section class="textarea">
+        <section class="alert">{{ alert }}</section>
         <form method="post">
             <textarea name="textarea" autofocus class="{{ disabled }}" {{ disabled }}>{{ message }}</textarea>
-            <input type="text" name="path" value="{{ path }}" hidden>
-            <section class="post-buttons">
-                <input class="action-button" type="submit" name="publish" value="Update" formaction="/update">
+            <section class="post-buttons {{ disabled }}">
+                <input class="action-button" type="submit" name="save" value="Save draft" formaction="/save"> | 
+                <input class="action-button" type="submit" name="publish" value="Publish" formaction="/publish">
             </section>
         </form>
     </section>

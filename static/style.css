@@ -77,9 +77,32 @@ main {
     text-decoration: none;
 }
 
+.home-menu {
+    margin: auto;
+    padding: 0;
+    text-align: center;
+}
+
+.home-button {
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: 2em sans-serif;
+	cursor: pointer;
+	outline: inherit;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1em;
+}
+
 .disabled {
     background-color: #999;
     color: #000;
+}
+
+section.disabled {
+    display: none;
 }
 
 .password-reset {
@@ -99,4 +122,10 @@ main {
 
 .menu-help {
     font-weight: bolder;
+}
+
+.alert {
+    margin: auto;
+    color: red;
+    font-weight: bold;
 }

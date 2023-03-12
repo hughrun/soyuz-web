@@ -35,7 +35,7 @@ const addUser = function(username, directory, callback){
         let stmt = db.prepare(
             'INSERT INTO users (username, directory, password, salt, saved_post) VALUES (?, ?, ?, ?, ?)'
             );
-        stmt.run(username, directory, hash, salt, '# Title of my note');
+        stmt.run(username, directory, hash, salt, null);
         return callback(password)
         });
 }
@@ -63,17 +63,6 @@ const resetPassword = function(username, pass, callback) {
      });
 }
 
-// update latest post in db
-const updateLatestPostDate = function(username, callback) {
-
-    let dateString = getNow().toISOString().slice(0,10)
-    let stmt = db.prepare(
-        'UPDATE users SET latest_post = ? WHERE username = ?'
-        );
-    stmt.run(dateString, username);
-    callback(dateString)
-}
-
 // AUTHORISATION MIDDLEWARE
 const verifyUser = function (req, res, next) {
     let username = req.body.username
@@ -96,9 +85,8 @@ const verifyUser = function (req, res, next) {
         }
         req.session.user = {
             username: user.username,
-            directory: user.directory,
-            latest_post: user.latest_post,
-        };
+            directory: user.directory
+        }
         next()
     });
 }
@@ -147,11 +135,8 @@ const publishNewPost = function(req, cb) {
             })
         })
         // clear any saved post now that it is published
-        saveFile(req.session.user.username, '# Title of my note', () => {
-            return updateLatestPostDate(req.session.user.username, datestring => {
-                req.session.user.latest_post = datestring
-                    return cb()
-                })
+        saveFile(req.session.user.username, null, () => {
+            return cb()
         })
     }
 
@@ -176,7 +161,6 @@ const publishNewPost = function(req, cb) {
                         newlines.push(line)
                     }
                 }
-                lines[0] = '## Latest notes'
                 newlines.unshift(`## Latest notes\n\n=> /${year}/${dateString}.gmi ${dateString} (${title})`)
                 updated = newlines.join('\n')
                 writeFile(indexFile, updated, (err) => {
@@ -213,22 +197,38 @@ const publishNewPost = function(req, cb) {
     })
 }
 
-let getLatestPost = function(directory, callback) {
+let getLatestPost = function(directory, dateOnly, callback) {
     // we check the index file because
     // a new post could have come from
     // somewhere other than the app
     // e.g. from a CLI on a laptop etc
     let indexFile = `${GEMINI_PATH}/${directory}/index.gmi`
     readFile(indexFile, {encoding: 'utf8'}, (err, data) => {
-        if (err) throw err;
+        if (err) {
+            if (err.code == 'ENOENT') {
+                return callback(null)
+            }
+            else {
+                throw err
+            }
+        }
+
+        if (data.length == 0 || data == null) {
+            return callback(null)
+        }
+
         let links = data.split('## Latest notes')
         let parts = links[1].split('\n')[2].split(' ')
         let filePath = `${GEMINI_PATH}/${directory}/${parts[1]}`
-
-        readFile(filePath, {encoding: 'utf8'}, (err, file) => {
-            if (err) throw err;
-            return callback(file, filePath)
-        })
+        if (dateOnly) {
+            let dateString = filePath.slice(-14,-4)
+            return callback(dateString)
+        } else {
+            readFile(filePath, {encoding: 'utf8'}, (err, file) => {
+                if (err) throw err;
+                return callback(file, filePath)
+            })
+        }
     })
 }
 
@@ -237,9 +237,12 @@ let updatePost = function(req, callback) {
     let path = req.body.path
     let title = contents.split('\n')[0].split('# ')[1].trim()
     let year = getNow().toISOString().slice(0,4)
-    let dateString = getNow().toISOString().slice(0,10)
     let indexFile = `${GEMINI_PATH}/${req.session.user.directory}/index.gmi`
     let yearIndex = `${GEMINI_PATH}/${req.session.user.directory}/${year}/index.gmi`
+    let relative_path = path.slice(-20)
+    let post_date = relative_path.slice(6,16)
+    let prefix = `=> ${relative_path} ${post_date}`
+    let archivePrefix = `=> ${relative_path.slice(6)} ${post_date}`
     let updated = ''
 
     // we update the index and archive listings in case the title has changed
@@ -250,7 +253,7 @@ let updatePost = function(req, callback) {
             let links = data.split('## Latest notes')
             let lines = links[1].split('\n')
             lines[0] = '## Latest notes'
-            lines[2] = `=> /${year}/${dateString}.gmi ${dateString} (${title})`
+            lines[2] = `${prefix} (${title})`
             updated = links[0] + lines.join('\n')
             // update index on homepage
             writeFile(indexFile, updated, (err) => {
@@ -260,7 +263,7 @@ let updatePost = function(req, callback) {
                         throw err
                     } else {
                         let lines = data.split('\n')
-                        lines[2] = `=> ${dateString}.gmi ${dateString} (${title})`
+                        lines[2] = `${archivePrefix} (${title})`
                         updated = lines.join('\n')
                         // update archive page
                         writeFile(yearIndex, updated, (err) => {
@@ -280,6 +283,7 @@ let updatePost = function(req, callback) {
     })
 }
 
+// NOTE: this refers to saving the file on the database, not publishing the file to the server
 let saveFile = function(user, text, callback) {
     let stmt = db.prepare(
         'UPDATE users SET saved_post = ? WHERE username = ?'

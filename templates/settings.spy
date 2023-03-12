@@ -1,6 +1,9 @@
 << partials/head >>
 <body>
-    << partials/header >>
+    <header>
+        <a class="action-button" href="/">Home</a> | 
+        <a class="action-button" href="/help">Help</a>
+    </header>
     <main id="settings">
         <form method="post">
             <section>
