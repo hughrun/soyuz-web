@@ -2,6 +2,8 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100vw;
+    font: 1.3em sans-serif;
 }
 
 body {
@@ -49,6 +51,7 @@ header form {
 
 textarea,
 main {
+    font: 1em sans-serif;
     outline: none;
     width: 90%;
     min-height:80vh;
@@ -78,7 +81,7 @@ main {
 }
 
 .home-menu {
-    margin: auto;
+    margin: 2em auto;
     padding: 0;
     text-align: center;
 }

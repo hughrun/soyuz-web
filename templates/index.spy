@@ -1,5 +1,8 @@
 << partials/head >>
 <body class="{{ disabled }}">
+    <header>
+        <h1>Soyuz</h1>
+    </header>
     <menu class="home-menu">
         <a class="home-button" href="/new">{{ writeNew }}</a><br/>
         <a class="home-button" href="/edit">Edit previous</a><br/>

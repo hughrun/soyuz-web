@@ -48,7 +48,7 @@ app.set('view engine', 'spy');
 // GET
 
 app.get('/', requireLoggedIn, (req, res) => {
-    res.render('index.spy', {title: 'Soyuz home', writeNew: getSavedFile(req.session.user.username)? 'Return to draft' : 'New'})
+    res.render('index.spy', {title: 'Home', writeNew: getSavedFile(req.session.user.username)? 'Return to draft' : 'New'})
 })
 
 app.get('/login', (req, res) => {
