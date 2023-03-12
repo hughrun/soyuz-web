@@ -153,16 +153,17 @@ const publishNewPost = function(req, cb) {
                     })
                 }
             } else {
-                let newlines = []
                 let links = data.split('## Latest notes')
-                let lines = links[1].split('\n')
-                for (let line of lines) {
-                    if (line.startsWith('=>') && newlines.length < 4) {
-                        newlines.push(line)
-                    }
+                let lines = links[1].trimStart().split('\n')
+                // remove the oldest item
+                if (lines[4].startsWith('=>')) {
+                    lines.splice(4,1)
                 }
-                newlines.unshift(`## Latest notes\n\n=> /${year}/${dateString}.gmi ${dateString} (${title})`)
-                updated = newlines.join('\n')
+                // add new post at top of list
+                lines.unshift(`## Latest notes\n\n=> /${year}/${dateString}.gmi ${dateString} (${title})`)
+                // add back everything preceeding latest notes
+                lines.unshift(`${links[0].trimEnd()}\n`) // because we join with a newline we need to remove one here
+                updated = lines.join('\n')
                 writeFile(indexFile, updated, (err) => {
                     if (err) {
                         // if the directory doesn't exist, create it and try again
