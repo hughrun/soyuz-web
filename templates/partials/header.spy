@@ -1,6 +1,0 @@
-<header>
-    <a class="action-button" href="/">New</a> | 
-    <a class="action-button" href="/edit">Edit</a> | 
-    <a class="action-button" href="/settings">Settings</a> | 
-    <a class="action-button" href="/help">Help</a>
-</header>

@@ -48,18 +48,7 @@ app.set('view engine', 'spy');
 // GET
 
 app.get('/', requireLoggedIn, (req, res) => {
-    let data = {
-        title: 'Home',
-        disabled: '',
-        message: getSavedFile(req.session.user.username)
-    }
-    let today = getNow().toISOString().slice(0,10)
-    let latestPost = req.session.user.latest_post
-    if (today === latestPost) {
-        data.disabled = 'disabled'
-        data.message = `Relax, ${req.session.user.username}, you have already posted today.`
-    }
-    res.render('index.spy', data)
+    res.render('index.spy', {title: 'Soyuz home', writeNew: getSavedFile(req.session.user.username)? 'Return to draft' : 'New'})
 })
 
 app.get('/login', (req, res) => {
@@ -70,9 +59,33 @@ app.get('/login', (req, res) => {
     }
 })
 
+app.get('/new', requireLoggedIn, (req, res) => {
+    let message = getSavedFile(req.session.user.username) || "# Title of my note"
+    let data = {
+        title: 'New post',
+        disabled: '',
+        message: message
+    }
+    let today = getNow().toISOString().slice(0,10)
+    // check whether user has already posted today
+    return getLatestPost(req.session.user.directory, true, (dateString)=> {
+        if (today === dateString) {
+            data.disabled = 'disabled'
+            data.message = `Relax, ${req.session.user.username}, you have already posted today.`
+        }
+        res.render('new.spy', data)
+    })
+})
+
 app.get('/edit', requireLoggedIn, (req, res) => {
-    getLatestPost( req.session.user.directory, (data, path) => {
-        res.render('edit.spy', {data: data, path: path, title: 'Edit'})
+    return getLatestPost(req.session.user.directory, true, (dateString) => {
+        if (dateString) {
+            return getLatestPost( req.session.user.directory, false, (message, path) => {
+                res.render('edit.spy', {message: message, path: path, title: 'Edit'})
+            })
+        } else {
+            res.redirect('/new')
+        }
     })
 })
 
@@ -118,7 +131,7 @@ app.post('/publish', requireLoggedIn, (req, res) => {
 
 app.post('/save', requireLoggedIn, (req, res) => {
     saveFile(req.session.user.username, req.body.textarea, () => {
-        res.redirect('/')
+        res.redirect('/new')
     })
 })
 
